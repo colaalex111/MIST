@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" connectionConfig="{&quot;serverAliveInterval&quot;:300}" host="eva0.cs.purdue.edu" id="636c624c-4012-4c8c-b8e8-0ff1a29fc7fd" port="22" customName="eva1.cs.purdue.edu" nameFormat="CUSTOM" username="lijiacheng" useOpenSSHConfig="true">
+        <option name="customName" value="eva1.cs.purdue.edu" />
+      </sshConfig>
+      <sshConfig authType="PASSWORD" host="ramos.cs.purdue.edu" id="2532c1cd-987e-4c63-aa62-e22dc47ffb28" port="22" customName="ramos" nameFormat="CUSTOM" username="li2829" useOpenSSHConfig="true">
+        <option name="customName" value="ramos" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>

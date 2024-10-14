@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="3f18cace-cfea-4980-bcf1-d351ea58f57c" name="eva1.cs.purdue.edu" url="http://eva2.cs.purdue.edu">
+        <fileTransfer rootFolder="/home/lijiacheng" accessType="SFTP" host="eva0.cs.purdue.edu" port="22" sshConfigId="636c624c-4012-4c8c-b8e8-0ff1a29fc7fd" sshConfig="eva1.cs.purdue.edu">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="b436b5e5-5af0-4b2b-a903-cb8a5215fb7d" name="ramos">
+        <fileTransfer rootFolder="/homes/li2829/scratch" accessType="SFTP" host="ramos.cs.purdue.edu" port="22" sshConfigId="2532c1cd-987e-4c63-aa62-e22dc47ffb28" sshConfig="ramos">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
