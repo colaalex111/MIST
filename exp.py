@@ -969,39 +969,9 @@ if __name__ == '__main__':
 		import sklearn
 		sklearn.utils.check_random_state(this_seed)
 		
-		#if (args.dataset=='cifar10'):
-		#	torch.set_default_dtype(torch.float64)
-		#	torch.set_default_tensor_type(torch.DoubleTensor)
-		#	args.set_double=1
-		#	print ('set type!')
-		
-		#lp_wrapper = profiler(attack_experiment)
-		#lp_wrapper()
-		#profiler.print_stats()
-		
-		
-		#w_list = [13,13.5,14,14.5,15]
-		#w_list = [6,6.5,7,7.5,8]
-		#w_list = [10,20,30,40,50]
-		#w_list = [2,3,4,5,6,7,8,9,10]
-		#for w in w_list:
-		#	args.user_number = int(w)
-		#	args.target_data_size = int(40000/args.user_number)
-		#	args.num_step = int(args.target_data_size/100)
-		#	args.cross_loss_diff_lambda = w
 		print(vars(args))
 		attack_experiment()
 		print(vars(args))
-		
-		#n_list = [5,6,7,8,9,10,11,12,13,14]
-		#for n in n_list:
-		#	args.cross_loss_diff_lambda = n
-		
-		#e_list = [0.001,0.005,0.01,0.05,0.1]
-		#w_list = [6,6.5,7,7.5,8,8.5,9,9.5]
-		#w_list = [10,20,30,40,50,60,70,80,90,100]
-		#for w in w_list:
-		#	args.cross_loss_diff_lambda = w
 		
 	
 	
