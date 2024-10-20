@@ -216,14 +216,10 @@ def assign_part_dataset(dataset, user_list=[],ban_list=[]):
 																									 highest_entropy * args.entropy_percentile))
 			train_label_modified = get_soft_labels(this_user.train_label, num_classes, top1, uniform_non_top1)
 			this_user.modified_train_label = train_label_modified
-			#print (train_label_modified.shape)
-			#print (train_label_modified[0],this_user.train_label[0])
 		
 		this_user.train_index = this_user_train_index
 		
 		this_user.class_weights = np.ones((len(np.unique(dataset.train_label)))) * training_set_size / (len(np.unique(dataset.train_label)) * (np.bincount(this_user.train_label,minlength=len(np.unique(dataset.train_label))) + 10))
-		
-		#this_user.class_weights = np.ones((len(np.unique(dataset.train_label)))) * training_set_size / (len(np.unique(dataset.train_label)) * (np.bincount(this_user.train_label)))
 		
 		this_user.test_data = dataset.test_data
 		this_user.test_label = dataset.test_label
@@ -415,7 +411,6 @@ def train_models(target_dataset,user_list, target_model, learning_rate, decay, e
 			global_weights = average_weights(local_weights)
 			target_model.load_state_dict(global_weights)
 			
-			#train_acc, test_acc = get_train_test_acc(user_list, target_model)
 			### apply MMD regularization
 			if (epoch!=epochs-1 and args.mmd_loss_lambda!=0):
 				weight_after_mmd = update_weights_mmd(target_model, user_list, target_model_optim, validation_loader=mmd_validation_loader,
@@ -423,29 +418,17 @@ def train_models(target_dataset,user_list, target_model, learning_rate, decay, e
 													  validation_set=validation_set,num_classes=num_classes,
 													  loss_lambda=args.mmd_loss_lambda, starting_index=user_list[0].starting_index)
 				target_model.load_state_dict(weight_after_mmd)
-				#print ("MMD done")
-			
-			# (all_train_prediction, all_validation_prediction, all_test_prediction), (all_train_loss, all_validation_loss, all_test_loss)
-			
-			#if (epoch == 60):
-			#	_,loss_dis_before = get_all_prob(target_model,target_dataset,training_index=training_index,validation_index=validation_index)
 			
 			if (epoch!=epochs-1 and args.cross_loss_diff_lambda!=0):
 				weight_after_cross_loss_diff = average_weights(update_weights_cross_loss_diff(user_list,loss_lambda=args.cross_loss_diff_lambda,loss_name=args.cross_loss))
 				target_model.load_state_dict(weight_after_cross_loss_diff)
-				#print ("CROSS LOSS DIFF done")
 
-			#if (epoch == 60):
-			#	_,loss_dis_after = get_all_prob(target_model, target_dataset, training_index=training_index, validation_index=validation_index)
-			#	np.savez('./expdata/cross-diff-eff.npz',loss_dis_before,loss_dis_after)
-			
 			### remove impacts of vulnerable points
 			## we find vulnerable points first
 			## for loss we can start from the beginning
 			## for logits diff, we should let the model train first and then start to do removing when it starts to overfit, like in the middle
 			if (args.grad_addback_weight!=0):
 				length,vulnerable_points_set = find_vulnerable_points(user_list,target_model,target_model_optim, mmd_train_loader, mmd_validation_loader,vul_metric=args.vul_metric,fpr_threshold=args.fpr_threshold)
-				#print ("vulnerable point set length", length)
 				if (length>0):
 					## create vulnerable points set loader
 					_,transform_test,target_transform = get_transformation(target_dataset)
@@ -455,8 +438,7 @@ def train_models(target_dataset,user_list, target_model, learning_rate, decay, e
 					## given those vulnerable points, we add those gradient back to the central model
 					weight_after_adding = update_weights_add_grad(target_model,target_model_optim,vulnerable_points_set_loader,weight=args.grad_addback_weight)
 					target_model.load_state_dict(weight_after_adding)
-					#print ("weight added back")
-					## ban these vulnerable points from training, since the last schedule ???
+					## ban these vulnerable points from training, since the last schedule
 					#print (epoch,args.schedule[-1])
 					if (epoch>= args.schedule[-1] or (epoch>=50)):  ## 0 or -1?
 						for this_user in user_list:
@@ -554,14 +536,8 @@ def get_all_prob(model,dataset,training_index,validation_index):
 					new_pred[argsort_index[index]] = this_random_pred[index]
 				sorted_random_pred.append(new_pred)
 			pred = torch.stack(sorted_random_pred)
-			#print (pred.shape)
-			
-		#print (outputs.shape)
-		#print (pred[0],torch.sum(pred[0]))
-		#loss = criterion(outputs, labels).detach()
 		## instead of using loss, we use prob
 		this_batch_prob = torch.tensor([pred[i][labels[i]] for i in range(len(labels))])
-		#print (this_batch_prob.shape)
 		all_train_loss.append(this_batch_prob)
 		all_train_prediction.append(pred)
 	all_test_prediction = []
@@ -643,13 +619,6 @@ def get_all_prob(model,dataset,training_index,validation_index):
 	all_train_prediction = torch.cat(all_train_prediction, dim=0).cpu().numpy()
 	all_validation_prediction = torch.cat(all_validation_prediction, dim=0).cpu().numpy()
 	
-	#print(all_train_loss.shape, all_test_loss.shape,all_validation_loss.shape)
-	#print (all_train_loss.dtype)
-	#print (np.sort(all_train_loss)[::-1][:100])
-	#print (np.sort(all_test_loss)[::-1][:100])
-	#print (np.sort(all_validation_loss)[::-1][:100])
-	#print(all_train_prediction.shape, all_test_prediction.shape,all_validation_prediction.shape)
-	
 	return (all_train_prediction,all_validation_prediction,all_test_prediction), (all_train_loss,all_validation_loss,all_test_loss)
 
 # do label only attack for all def.
@@ -679,9 +648,6 @@ def label_only_attack(model,dataset,training_index,validation_index):
 	### get train data distance
 	train_distance = []
 	for this_data,this_label,_ in tqdm(train_loader):
-		#this_adv_data,_ = attack_method._perturb(this_data,this_label)
-		#print (this_adv_data.shape,this_data.shape)
-		#this_distance = torch.linalg.norm(torch.abs(this_adv_data-this_data))
 		this_data = this_data.to(device)
 		this_pred = torch.argmax(model(this_data),dim=1)
 		#print (this_pred.shape)
@@ -802,12 +768,7 @@ def attack_experiment():
 													 validation_set = validation_set,training_index=training_partition,
 													 validation_index=validation_partition)
 		all_vul_set_test_acc.append(vul_set_acc)
-		#all_models.append(target_model)
-		
-		#from nasr_whitebox_attack import nasr_whitebox_attack
-		#nasr_whitebox_attack = nasr_whitebox_attack(num_classes)
-		#nasr_whitebox_attack.run_attack(target_model=target_model,target_model_optim=target_model_optim,target_dataset=target_dataset,training_partition=training_partition,train_epoch=20,fpr_threshold=0.001)
-		
+	
 		### do label only attack
 		if (args.label_only_attack):
 			label_only_attack(target_model,target_dataset,training_index=training_partition,validation_index=validation_partition)
