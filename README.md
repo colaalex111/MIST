@@ -1,4 +1,4 @@
-code for paper: {MIST}: Defending Against Membership Inference Attacks Through {Membership-Invariant} Subspace Training
+code for paper: {MIST}: Defending Against Membership Inference Attacks Through {Membership-Invariant} Subspace Training. The main file is exp.py and example CLIs are included in exp.sh.
 
 ```
 @inproceedings{li2024mist,
