@@ -9,4 +9,3 @@ code for paper: {MIST}: Defending Against Membership Inference Attacks Through {
   year={2024}
 }
 ```
-please checkout exp.sh for example CLIs for running experiments.
